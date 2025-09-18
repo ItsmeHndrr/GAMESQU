@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Pintar (GP)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Added Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            /* Updated light mode colors to white and purple theme */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f7ff;
+            --text-primary: #2d1b69;
+            --text-secondary: #6b46c1;
+            --card-bg: #ffffff;
+            --accent-primary: #8b5cf6;
+            --accent-secondary: #a855f7;
+            --accent-tertiary: #c084fc;
+            --success: #10b981;
+            --error: #ef4444;
+            --warning: #f59e0b;
+            --shadow-sm: 0 1px 2px 0 rgba(139, 92, 246, 0.1);
+            --shadow-md: 0 4px 6px -1px rgba(139, 92, 246, 0.15), 0 2px 4px -1px rgba(139, 92, 246, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(139, 92, 246, 0.15), 0 4px 6px -2px rgba(139, 92, 246, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(139, 92, 246, 0.15), 0 10px 10px -5px rgba(139, 92, 246, 0.1);
+            --gradient-primary: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);
+            --gradient-secondary: linear-gradient(135deg, #c084fc 0%, #ddd6fe 100%);
+            --gradient-tertiary: linear-gradient(135deg, #a855f7 0%, #c084fc 100%);
+            --gradient-bg: linear-gradient(135deg, #ffffff 0%, #f8f7ff 50%, #ede9fe 100%);
+            --border-radius: 16px;
+            --border-radius-lg: 24px;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0f0f23;
+            --bg-secondary: #1a1a2e;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --card-bg: #16213e;
+            --accent-primary: #818cf8;
+            --accent-secondary: #a78bfa;
+            --accent-tertiary: #22d3ee;
+            --success: #34d399;
+            --error: #f87171;
+            --warning: #fbbf24;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-tertiary: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --gradient-bg: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--gradient-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: var(--card-bg);
+            border-radius: var(--border-radius-lg);
+            padding: 24px 32px;
+            margin-bottom: 32px;
+            box-shadow: var(--shadow-lg);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(139, 92, 246, 0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo-icon {
+            width: 56px;
+            height: 56px;
+            background: var(--gradient-primary);
+            border-radius: var(--border-radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        #points {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--accent-primary);
+            background: var(--bg-secondary);
+            padding: 12px 20px;
+            border-radius: var(--border-radius);
+            border: 2px solid var(--accent-primary);
+        }
+
+        #theme-switcher {
+            display: flex;
+            background: var(--bg-secondary);
+            border-radius: var(--border-radius);
+            padding: 4px;
+            gap: 4px;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        #theme-switcher button {
+            padding: 10px 16px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            border-radius: calc(var(--border-radius) - 4px);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        #theme-switcher button:hover {
+            background: var(--accent-primary);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        #theme-switcher button.active {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        main {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .game-card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius-lg);
+            padding: 32px 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-md);
+            border: 1px solid rgba(139, 92, 246, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .game-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .game-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--accent-primary);
+        }
+
+        .game-card-icon {
+            width: 64px;
+            height: 64px;
+            background: var(--gradient-primary);
+            border-radius: var(--border-radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: white;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .game-card h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .game-card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        #game-container {
+            display: none;
+            background: var(--card-bg);
+            border-radius: var(--border-radius-lg);
+            padding: 40px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(139, 92, 246, 0.1);
+        }
+
+        #game-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 32px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        #question {
+            background: var(--bg-secondary);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            margin-bottom: 24px;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        #question img {
+            max-width: 100%;
+            height: auto;
+            border-radius: var(--border-radius);
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .input-group {
+            margin-bottom: 24px;
+        }
+
+        #answer-input {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid rgba(139, 92, 246, 0.3);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        #answer-input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 2px solid rgba(139, 92, 246, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: var(--accent-primary);
+            color: white;
+            border-color: var(--accent-primary);
+        }
+
+        #feedback {
+            text-align: center;
+            padding: 16px 24px;
+            border-radius: var(--border-radius);
+            margin: 24px 0;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        #feedback.success {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+            border: 2px solid var(--success);
+        }
+
+        #feedback.error {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--error);
+            border: 2px solid var(--error);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 16px;
+            }
+
+            header {
+                padding: 20px;
+            }
+
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .game-card {
+                padding: 24px 20px;
+            }
+
+            #game-container {
+                padding: 24px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            main {
+                grid-template-columns: 1fr;
+            }
+
+            .header-controls {
+                width: 100%;
+                justify-content: center;
+            }
+
+            #theme-switcher {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="logo-section">
+                    <!-- Replaced emoji with Font Awesome icon -->
+                    <div class="logo-icon"><i class="fas fa-gamepad"></i></div>
+                    <h1>Game Pintar</h1>
+                </div>
+                <div class="header-controls">
+                    <div id="points">Points: 0</div>
+                    <div id="theme-switcher">
+                        <button data-theme="light">Light</button>
+                        <button data-theme="dark">Dark</button>
+                        <button data-theme="system">System</button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main id="dashboard">
+            <div class="game-card" onclick="loadGame('tebakbendera')">
+                <!-- Replaced emoji with Font Awesome icon -->
+                <div class="game-card-icon"><i class="fas fa-flag"></i></div>
+                <h2>Tebak Bendera</h2>
+                <p>Uji pengetahuan geografimu dengan menebak bendera dari berbagai negara di dunia</p>
+            </div>
+            <div class="game-card" onclick="loadGame('susunkata')">
+                <!-- Replaced emoji with Font Awesome icon -->
+                <div class="game-card-icon"><i class="fas fa-spell-check"></i></div>
+                <h2>Susun Kata</h2>
+                <p>Asah kemampuan bahasamu dengan menyusun huruf-huruf menjadi kata yang benar</p>
+            </div>
+            <div class="game-card" onclick="loadGame('siapakahaku')">
+                <!-- Replaced emoji with Font Awesome icon -->
+                <div class="game-card-icon"><i class="fas fa-question-circle"></i></div>
+                <h2>Siapa Kah Aku</h2>
+                <p>Tebak tokoh, tempat, atau benda berdasarkan petunjuk yang diberikan</p>
+            </div>
+            <div class="game-card" onclick="loadGame('tebakgambar')">
+                <!-- Replaced emoji with Font Awesome icon -->
+                <div class="game-card-icon"><i class="fas fa-image"></i></div>
+                <h2>Tebak Gambar</h2>
+                <p>Lihat gambar dan tebak apa yang ada di dalamnya dengan tepat</p>
+            </div>
+            <div class="game-card" onclick="loadGame('tekateki')">
+                <!-- Replaced emoji with Font Awesome icon -->
+                <div class="game-card-icon"><i class="fas fa-puzzle-piece"></i></div>
+                <h2>Teka Teki</h2>
+                <p>Pecahkan berbagai teka-teki menarik yang akan mengasah logika dan kreativitasmu</p>
+            </div>
+        </main>
+
+        <section id="game-container">
+            <h2 id="game-title"></h2>
+            <div id="question"></div>
+            <div class="input-group">
+                <input type="text" id="answer-input" placeholder="Masukkan jawaban Anda...">
+            </div>
+            <div class="button-group">
+                <button id="submit-answer" class="btn btn-primary" onclick="checkAnswer()">Kirim Jawaban</button>
+                <button id="back-to-dashboard" class="btn btn-secondary" onclick="backToDashboard()">Kembali ke Dashboard</button>
+            </div>
+            <div id="feedback"></div>
+            <div class="button-group" style="margin-top: 24px;">
+                <button id="next-question" class="btn btn-primary" onclick="fetchQuestion()" style="display: none;">Pertanyaan Berikutnya</button>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const games = {
+            'tebakbendera': {
+                url: 'https://api.siputzx.my.id/api/games/tebakbendera',
+                answerKey: 'name',
+                display: (data) => `<img src="${data.img}" alt="Flag"><p>Tebak negara dari bendera ini:</p>`
+            },
+            'susunkata': {
+                url: 'https://api.siputzx.my.id/api/games/susunkata',
+                answerKey: 'jawaban',
+                display: (data) => `<p><strong>Soal:</strong> ${data.soal}</p><p><strong>Tipe:</strong> ${data.tipe}</p><p>Susun kata yang benar:</p>`
+            },
+            'siapakahaku': {
+                url: 'https://api.siputzx.my.id/api/games/siapakahaku',
+                answerKey: 'jawaban',
+                display: (data) => `<p>${data.soal}</p><p><strong>Siapa kah aku?</strong></p>`
+            },
+            'tebakgambar': {
+                url: 'https://api.siputzx.my.id/api/games/tebakgambar',
+                answerKey: 'jawaban',
+                display: (data) => `<img src="${data.img}" alt="Gambar"><p><strong>Deskripsi:</strong> ${data.deskripsi}</p><p>Tebak gambar ini:</p>`
+            },
+            'tekateki': {
+                url: 'https://api.siputzx.my.id/api/games/tekateki',
+                answerKey: 'jawaban',
+                display: (data) => `<p>${data.soal}</p><p><strong>Jawab teka-teki ini:</strong></p>`
+            }
+        };
+
+        let currentGame = '';
+        let currentQuestion = null;
+        let points = parseInt(localStorage.getItem('wgp_points')) || 0;
+        document.getElementById('points').textContent = `Points: ${points}`;
+
+        // Theme functionality
+        const themeButtons = document.querySelectorAll('#theme-switcher button');
+        const savedTheme = localStorage.getItem('wgp_theme') || 'system';
+        
+        function setTheme(mode) {
+            if (mode === 'system') {
+                document.body.removeAttribute('data-theme');
+            } else {
+                document.body.setAttribute('data-theme', mode);
+            }
+            localStorage.setItem('wgp_theme', mode);
+            themeButtons.forEach(btn => {
+                btn.classList.toggle('active', btn.getAttribute('data-theme') === mode);
+            });
+        }
+
+        // Initialize theme
+        setTheme(savedTheme);
+
+        themeButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const mode = button.getAttribute('data-theme');
+                setTheme(mode);
+            });
+        });
+
+        function loadGame(game) {
+            currentGame = game;
+            const gameTitle = game.charAt(0).toUpperCase() + game.slice(1).replace(/([A-Z])/g, ' $1');
+            document.getElementById('game-title').textContent = gameTitle;
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('game-container').style.display = 'block';
+            fetchQuestion();
+        }
+
+        async function fetchQuestion() {
+            try {
+                const res = await fetch(games[currentGame].url);
+                const data = await res.json();
+                if (data.status) {
+                    currentQuestion = data.data;
+                    document.getElementById('question').innerHTML = games[currentGame].display(currentQuestion);
+                    document.getElementById('answer-input').value = '';
+                    document.getElementById('feedback').style.display = 'none';
+                    document.getElementById('next-question').style.display = 'none';
+                    document.getElementById('answer-input').focus();
+                }
+            } catch (error) {
+                console.error('Error fetching question:', error);
+                document.getElementById('question').innerHTML = '<p style="color: var(--error);">Terjadi kesalahan saat memuat pertanyaan. Silakan coba lagi.</p>';
+            }
+        }
+
+        function checkAnswer() {
+            const userAnswer = document.getElementById('answer-input').value.trim().toLowerCase();
+            const correctAnswer = currentQuestion[games[currentGame].answerKey].trim().toLowerCase();
+            const feedback = document.getElementById('feedback');
+            const nextButton = document.getElementById('next-question');
+
+            if (userAnswer === correctAnswer) {
+                points += 10;
+                localStorage.setItem('wgp_points', points);
+                document.getElementById('points').textContent = `Points: ${points}`;
+                feedback.innerHTML = '<i class="fas fa-check-circle"></i> Benar! +10 Points';
+                feedback.className = 'success';
+                feedback.style.display = 'block';
+                nextButton.style.display = 'inline-flex';
+            } else {
+                feedback.innerHTML = `<i class="fas fa-times-circle"></i> Salah! Jawaban benar: ${currentQuestion[games[currentGame].answerKey]}`;
+                feedback.className = 'error';
+                feedback.style.display = 'block';
+                nextButton.style.display = 'none';
+                setTimeout(() => {
+                    fetchQuestion();
+                }, 3000);
+            }
+        }
+
+        function backToDashboard() {
+            document.getElementById('dashboard').style.display = 'grid';
+            document.getElementById('game-container').style.display = 'none';
+            document.getElementById('feedback').style.display = 'none';
+            document.getElementById('next-question').style.display = 'none';
+        }
+
+        // Enter key support
+        document.getElementById('answer-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+
+        // Smooth scrolling for better UX
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
